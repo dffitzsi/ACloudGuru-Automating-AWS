@@ -12,3 +12,4 @@ Webotron now has the following features:
 - You can   
     - List bucket
     - List bucket contents
+    - Create and enable Website on s3 buckets
