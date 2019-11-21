@@ -27,6 +27,7 @@ def list_bucket_object(bucket):
 def setup_bucket(bucket):
     "Configure Website on S3 Buckets"
     s3_bucket = None
+
     try:
         s3_bucket = s3.create_bucket(
             Bucket=bucket,
@@ -40,22 +41,22 @@ def setup_bucket(bucket):
 
     policy = """
     {
-  "Version": "2012-10-17",
-  "Id": "S3PolicyId1",
-  "Statement": [
+    "Version": "2012-10-17",
+    "Id": "S3PolicyId1",
+    "Statement": [
     {
-      "Sid": "IPAllow",
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": "s3:*",
-      "Resource": "arn:aws:s3:::%s/*",
-      "Condition": {
-         "IpAddress": {"aws:SourceIp": "79.97.148.119/32"},
-         "NotIpAddress": {"aws:SourceIp": "54.240.143.188/32"} 
-      } 
+        "Sid": "IPAllow",
+        "Effect": "Allow",
+        "Principal": "*",
+        "Action": "s3:*",
+        "Resource": "arn:aws:s3:::%s/*",
+        "Condition": {
+            "IpAddress": {"aws:SourceIp": "79.97.148.119/32"},
+            "NotIpAddress": {"aws:SourceIp": "54.241.143.188/32"} 
+        } 
     } 
-  ]
-}
+    ]
+    }
     """ % s3_bucket.name
     policy = policy.strip()
 
@@ -71,7 +72,6 @@ def setup_bucket(bucket):
             'Suffix': 'index.html'
         }
     })
-
     return
 
 if __name__ == '__main__':
