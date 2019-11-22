@@ -2,6 +2,7 @@ import boto3
 import click
 from botocore.exceptions import ClientError
 from pathlib import Path
+import mimetypes
 
 session = boto3.Session(profile_name='default')
 s3 = session.resource('s3')
@@ -76,12 +77,13 @@ def setup_bucket(bucket):
     return
 
 def upload_file(s3_bucket, path, key):
+    content_type = mimetypes.guess_type(key)[0] or 'text/plain'
     s3_bucket.upload_file(
         path,
         key,
         ExtraArgs={
-            'ContentType': 'text/html'
-        })
+            'ContentType': 'text/html' 
+        }) 
 
 @cli.command('sync')
 @click.argument('pathname', type=click.Path(exists=True))

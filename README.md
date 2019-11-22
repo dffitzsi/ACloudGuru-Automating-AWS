@@ -12,4 +12,5 @@ Webotron now has the following features:
 - You can   
     - List bucket
     - List bucket contents
-    - Create and enable Website on s3 buckets - fixed a bug in the try/except for error handling
+    - Create and set up a bucket
+    - Sync a local directory tree to a bucket
