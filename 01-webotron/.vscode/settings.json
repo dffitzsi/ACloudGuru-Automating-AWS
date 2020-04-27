@@ -1,0 +1,8 @@
+{
+    "python.pythonPath": "/Users/david/.local/share/virtualenvs/01-webotron-azCU_xm0/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.flake8Enabled": false,
+    "python.linting.enabled": true,
+    
+    "editor.tabCompletion": "on"
+}

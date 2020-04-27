@@ -5,11 +5,12 @@ from pathlib import Path
 import mimetypes
 
 session = boto3.Session(profile_name='default')
-s3 = session.resource('s3')
+    s3 = session.resource('s3')
 @click.group()
 def cli():
     "Webotron deploys website to AWS"
     pass
+
 
 @cli.command('list-buckets')
 def list_buckets():
@@ -17,12 +18,14 @@ def list_buckets():
     for bucket in s3.buckets.all():
         print(bucket)
 
+
 @cli.command('list-bucket-objects')
 @click.argument('bucket')
 def list_bucket_object(bucket):
     "List Ojects in an S3 bucket"
     for obj in s3.Bucket(bucket).objects.all():
         print(obj)
+
 
 @cli.command('setup-bucket')
 @click.argument('bucket')
@@ -33,7 +36,7 @@ def setup_bucket(bucket):
     try:
         s3_bucket = s3.create_bucket(
             Bucket=bucket,
-            CreateBucketConfiguration={'LocationConstraint': session.region_name}
+            CreateBucketConfiguration = {'LocationConstraint': session.region_name}
         )
     except ClientError as e:
         if e.response['Error']['Code'] == 'BucketAlreadyOwnedByYou':
@@ -54,9 +57,9 @@ def setup_bucket(bucket):
         "Resource": "arn:aws:s3:::%s/*",
         "Condition": {
             "IpAddress": {"aws:SourceIp": "79.97.148.119/32"},
-            "NotIpAddress": {"aws:SourceIp": "54.241.143.188/32"} 
-        } 
-    } 
+            "NotIpAddress": {"aws:SourceIp": "54.241.143.188/32"}
+        }
+    }
     ]
     }
     """ % s3_bucket.name
@@ -76,14 +79,16 @@ def setup_bucket(bucket):
     })
     return
 
+
 def upload_file(s3_bucket, path, key):
     content_type = mimetypes.guess_type(key)[0] or 'text/plain'
     s3_bucket.upload_file(
         path,
         key,
         ExtraArgs={
-            'ContentType': 'text/html' 
-        }) 
+            'ContentType': content_type
+        })
+
 
 @cli.command('sync')
 @click.argument('pathname', type=click.Path(exists=True))
@@ -93,14 +98,15 @@ def sync(pathname, bucket):
     s3_bucket = s3.Bucket(bucket)
 
     root = Path(pathname).expanduser().resolve()
-    
+
     def handle_directory(target):
         for p in target.iterdir():
             if p.is_dir(): handle_directory(p)
             if p.is_file(): upload_file(s3_bucket, str(p), str(p.relative_to(root)))
-            
+
     handle_directory(root)
-    
+    return
+
 
 if __name__ == '__main__':
     cli()
